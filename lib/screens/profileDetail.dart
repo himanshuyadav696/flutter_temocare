@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:temocare_flutter/editProfile.dart';
+import 'package:temocare_flutter/screens/changePassword.dart';
+import 'editProfile.dart';
 class ProfileDetail extends StatefulWidget{
   const ProfileDetail({super.key});
-
   @override
   State<ProfileDetail> createState() => _ProfileState();
 }
@@ -165,6 +165,9 @@ class _ProfileState extends State<ProfileDetail>{
                   children: [
                     OutlinedButton(
                         onPressed: (){
+                          Navigator.push(context,MaterialPageRoute(builder: (context){
+                            return ChangePassword();
+                          }));
                     },
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -187,7 +190,102 @@ class _ProfileState extends State<ProfileDetail>{
                       width: 20,
                     ),
                     ElevatedButton(
-                        onPressed: (){},
+                        onPressed: (){
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0)
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: 300,
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(top: 16),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              SvgPicture.asset("assests/images/ic_delete.svg"),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 20),
+                                                child: Text("Are you sure ?",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 24),),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 16,right: 16,top: 20),
+                                                child: Center(child: Text("You want to delete your account this action can’t be undone",textAlign: TextAlign.center,style: TextStyle(height: 1.5,color: Colors.grey,fontWeight: FontWeight.w400,fontSize: 16),)),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 20,bottom: 20),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      child: ElevatedButton(
+                                                          style: ButtonStyle(
+                                                              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)))
+                                                          ),
+                                                          onPressed: (){
+                                                            Navigator.pop(context);
+                                                          },
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                                            child: Text("Yes",style: TextStyle(
+                                                                fontSize: 20,
+                                                                fontWeight: FontWeight.w600
+                                                            ),
+                                                            ),
+                                                          )),
+                                                    ),
+                                                    Container(
+                                                      height: 50,
+                                                      child: OutlinedButton(
+                                                          style: ButtonStyle(
+                                                              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
+                                                              side: MaterialStateProperty.all(BorderSide(color: Colors.pink,width: 2))
+                                                          ),
+                                                          onPressed: (){
+                                                            Navigator.pop(context);
+                                                          },
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                                            child: Text("No",style: TextStyle(
+                                                                fontSize: 20,
+                                                                fontWeight: FontWeight.w600
+                                                            ),
+                                                            ),
+                                                          )),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 10,right: 10),
+                                          child: InkWell(
+                                            onTap: (){
+                                              Navigator.pop(context);
+                                            },
+                                              child: SvgPicture.asset("assests/images/Cross.svg")),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
                         style: ButtonStyle(
                           shape: MaterialStateProperty.all(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)
@@ -211,5 +309,24 @@ class _ProfileState extends State<ProfileDetail>{
       ),
     );
   }
+}
+
+class DeleteAlert extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: Center(
+        child: Container(
+          child: Column(
+            children: [
+              SvgPicture.asset("assets/images/ic_delete.svg"),
+              const Text("Are you sure ?",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 24),)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
 }
+

@@ -1,11 +1,15 @@
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:temocare_flutter/HomeScreen.dart';
-import 'package:temocare_flutter/RegisterationScreen.dart';
-import 'package:temocare_flutter/Splash.dart';
-import 'package:temocare_flutter/forgotEmail.dart';
+import 'package:http/http.dart' as http;
+import 'package:temocare_flutter/screens/RegisterationScreen.dart';
+import 'package:temocare_flutter/screens/Splash.dart';
+import 'package:temocare_flutter/sharedPreferences/SharedPreferencesUtil.dart';
+import '../apputils/utils.dart';
+import 'HomeScreen.dart';
+import 'forgotEmail.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -31,8 +35,65 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
-
 class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  final imgUrl = "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4";
+  bool downloading = false;
+  var progressString = "";
+  var userName ="";
+  var userrofile = "";
+
+  void _login(String email, String password) async{
+    final response = await http.post(Uri.parse("https://temocare.com/api/login/"),body: {
+      'email': email,
+      'password': password,
+      'deviceType': "1",
+      'deviceToken':"abc1123"
+    },);
+    print('Request Body: ${json.encode(response.toString())}');
+    try {
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        if (data['error'] == null) {
+          var responseData = data['response']['data'];
+          var userId = responseData['userId'];
+          var firstName = responseData['first_name'];
+          var lastName = responseData['last_name'];
+          var accessToken = responseData['accessToken'];
+          var success = data['response']['message']['success'];
+          var successCode = data['response']['message']['successCode'];
+          var statusCode = data['response']['message']['statusCode'];
+          var successMessage = data['response']['message']['successMessage'];
+          await SharedPreferencesUtil.saveString("accessToken", accessToken);
+          print('User ID: $userId');
+          print('Name: $firstName $lastName');
+          print("accessToken $accessToken");
+          print('Success: $success');
+          print('Success Code: $successCode');
+          print('Status Code: $statusCode');
+          print('Success Message: $successMessage');
+          toastMessage(successMessage);
+          _navigateToHomeScreen(responseData);
+        } else {
+          String errorMessage = data['error']['errorMessage'];
+          print('Error: ${data['error']['errorMessage']}');
+          toastMessage(errorMessage);
+        }
+      } else {
+        print('Error: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+  void _navigateToHomeScreen(Map<String, dynamic> data) {
+    Navigator.push(context, MaterialPageRoute(builder:(context){
+      return HomeScreen(data);
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                Padding(
                  padding: const EdgeInsets.only(top: 10),
                  child: TextField(
+                   controller: email,
                      decoration:InputDecoration(
                          isDense: true,
                          contentPadding: const EdgeInsets.only(left: 10,right: 5),
@@ -70,13 +132,14 @@ class _MyHomePageState extends State<MyHomePage> {
                          border: OutlineInputBorder(
                              borderRadius: BorderRadius.circular(10)
                          ),
-                         hintText: "Enter your email"
+                         hintText: "Enter your email",
                      )
                  ),
                ),
                Padding(
                  padding: const EdgeInsets.only(top: 20),
                  child: TextField(
+                   controller: password,
                      decoration:InputDecoration(
                          isDense: true,
                          contentPadding: const EdgeInsets.only(left: 10,right: 5),
@@ -111,9 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
                    width: double.infinity,
                    height: 50,
                    child: ElevatedButton(onPressed: (){
-                     Navigator.push(context, MaterialPageRoute(builder: (context){
-                       return HomeScreen();
-                     }));
+                     _login(email.text.toString(),password.text.toString());
                    },
                        style: ElevatedButton.styleFrom(
                          shape: RoundedRectangleBorder(
@@ -204,4 +265,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:temocare_flutter/main.dart';
+import 'package:temocare_flutter/screens/main.dart';
 
 class Splash extends StatefulWidget{
   const Splash({super.key});
