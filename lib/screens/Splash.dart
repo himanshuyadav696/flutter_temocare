@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:temocare_flutter/screens/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:temocare_flutter/main.dart';
+import 'package:temocare_flutter/sharedPreferences/SharedPreferencesUtil.dart';
+
+import 'HomeScreen.dart';
 
 class Splash extends StatefulWidget{
   const Splash({super.key});
@@ -9,6 +13,7 @@ class Splash extends StatefulWidget{
   _SplashState createState() => _SplashState();
 }
 class _SplashState extends State<Splash>{
+  bool isLoginFirst = false;
   @override void initState(){
     super.initState();
     _navigateToLogin();
@@ -17,7 +22,6 @@ class _SplashState extends State<Splash>{
     await Future.delayed(Duration(milliseconds: 1500),(){});
     Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>MyHomePage(title: "Home")));
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

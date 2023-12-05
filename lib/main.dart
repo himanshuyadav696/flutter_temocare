@@ -7,13 +7,13 @@ import 'package:http/http.dart' as http;
 import 'package:temocare_flutter/screens/RegisterationScreen.dart';
 import 'package:temocare_flutter/screens/Splash.dart';
 import 'package:temocare_flutter/sharedPreferences/SharedPreferencesUtil.dart';
-import '../apputils/utils.dart';
-import 'HomeScreen.dart';
-import 'forgotEmail.dart';
+import 'Api/ApiConstants.dart';
+import 'apputils/utils.dart';
+import 'screens/HomeScreen.dart';
+import 'screens/forgotEmail.dart';
 void main() {
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
@@ -43,9 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
   var progressString = "";
   var userName ="";
   var userrofile = "";
-
   void _login(String email, String password) async{
-    final response = await http.post(Uri.parse("https://temocare.com/api/login/"),body: {
+    final response = await http.post(Uri.parse(ApiConstants.baseUrl + ApiConstants.loginEndPoint),body: {
       'email': email,
       'password': password,
       'deviceType': "1",
@@ -60,12 +59,15 @@ class _MyHomePageState extends State<MyHomePage> {
           var userId = responseData['userId'];
           var firstName = responseData['first_name'];
           var lastName = responseData['last_name'];
+          var profilePic = responseData['profile_image_url'];
           var accessToken = responseData['accessToken'];
           var success = data['response']['message']['success'];
           var successCode = data['response']['message']['successCode'];
           var statusCode = data['response']['message']['statusCode'];
           var successMessage = data['response']['message']['successMessage'];
           await SharedPreferencesUtil.saveString("accessToken", accessToken);
+          await SharedPreferencesUtil.saveString("profilePic", profilePic);
+          await SharedPreferencesUtil.saveBool("isLoginFirst", true);
           print('User ID: $userId');
           print('Name: $firstName $lastName');
           print("accessToken $accessToken");
@@ -90,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _navigateToHomeScreen(Map<String, dynamic> data) {
     Navigator.push(context, MaterialPageRoute(builder:(context){
-      return HomeScreen(data);
+      return HomeScreen();
     }));
   }
 
@@ -174,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
                    width: double.infinity,
                    height: 50,
                    child: ElevatedButton(onPressed: (){
-                     _login(email.text.toString(),password.text.toString());
+                     checkValidation(email.text,password.text);
                    },
                        style: ElevatedButton.styleFrom(
                          shape: RoundedRectangleBorder(
@@ -263,6 +265,18 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  void checkValidation(String email,String password) {
+    if(email.isEmpty){
+      toastMessage("Please enter email");
+    }
+    else if(password.isEmpty){
+      toastMessage("Please enter password");
+    }
+    else{
+      _login(email,password);
+    }
   }
 }
 

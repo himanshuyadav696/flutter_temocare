@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:temocare_flutter/Api/ApiConstants.dart';
 import 'package:temocare_flutter/screens/myAppointment.dart';
 import 'package:temocare_flutter/screens/profileDetail.dart';
 import 'package:temocare_flutter/sharedPreferences/SharedPreferencesUtil.dart';
-import '../Models/Welcome.dart';
 import '../apputils/utils.dart';
 import 'doctorDetail.dart';
 class HomeScreen extends StatelessWidget{
-  Map<String, dynamic> data1;
-  HomeScreen(this.data1, {super.key});
+  HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,31 +26,69 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePageState extends State<HomePage> {
-  var firstName;
-  var lastName;
+  String firstName = "";
+  String lastName ="";
   var profile;
   var accessToken;
-  List<Result> results = [];
+  var results = [];
 
   @override
   void initState() {
     super.initState();
     _initSharedPreferences();
-    getDoctorList(accessToken.toString());
+    getDoctorList();
+  }
 
+  Future<void> getDoctorList() async {
+    try {
+      var apiUrl = ApiConstants.baseUrl+ApiConstants.getDoctorListEndPoint;
+      var response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        if(data['error']==null){
+          var responseData = data['response']['data']['results'];
+          print('Response Data: $responseData');
+          setState(() {
+            results = responseData;
+          });
+          print("doctor fetched lis :$results");
+          var success = data['response']['message']['success'];
+          var successCode = data['response']['message']['successCode'];
+          var statusCode = data['response']['message']['statusCode'];
+          var successMessage = data['response']['message']['successMessage'];
+          toastMessage(successMessage);
+        }
+        else{
+          String errorMessage = data['error']['errorMessage'];
+          print('Error: ${data['error']['errorMessage']}');
+          toastMessage(errorMessage);
+        }
+      } else {
+        // print('Error: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
   }
 
   void _initSharedPreferences() async {
-    firstName = await SharedPreferencesUtil.getString("firstName");
-    lastName = await SharedPreferencesUtil.getString("lastName");
-    profile = await SharedPreferencesUtil.getString("profileImage");
-    accessToken = await SharedPreferencesUtil.getString("accessToken");
+    setState(() async {
+      firstName = (await SharedPreferencesUtil.getString("firstName"))!;
+      lastName = (await SharedPreferencesUtil.getString("lastName"))!;
+      profile = await SharedPreferencesUtil.getString("profileImage");
+      accessToken = await SharedPreferencesUtil.getString("accessToken");
+      profile = await SharedPreferencesUtil.getString("profilePic");
+    });
     print(firstName);
     print(lastName);
     print(profile);
-    print("accessToken");
+    print(accessToken);
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,7 +170,11 @@ class _HomePageState extends State<HomePage> {
                         height: 50,
                         width: 50,
                         child: Card(
-                          child: Image.network(profile.toString()),
+                          elevation: 5,
+                          child:ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                          child: Image.network(profile.toString(),height: 50,width: 50,)
+                          ),
                         ),
                       ),
                     )
@@ -188,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: 10,
+                    itemCount:results == null ? 0 : results.length,
                     shrinkWrap: true,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
@@ -212,7 +253,11 @@ class _HomePageState extends State<HomePage> {
                                       border: Border.all(color: Colors.black),
                                       borderRadius: BorderRadius.all(Radius.circular(10))
                                   ),
-                                  child: Image.asset("assests/images/iv_doctor.png"),
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.network(results[index]['image_url'].toString(),
+                                        fit: BoxFit.fitHeight,
+                                      )),
                                 ),
                               ),
                               Expanded(
@@ -222,25 +267,25 @@ class _HomePageState extends State<HomePage> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("Dr Himanshu",style: TextStyle(
+                                          Text(results[index]['fullName'],style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 20,
                                             fontWeight: FontWeight.w500,
                                           ),),
-                                          Text("Neurologist",style: TextStyle(
+                                          Text(results[index]['specialization'].toString(),style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.grey,
                                             fontWeight: FontWeight.w400,
                                           ),),
                                           Row(
                                             children: [
-                                              Text("20 | ",style: TextStyle(
+                                              Text("\$${results[index]['fee']}",style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w500
                                               ),),
                                               Padding(
                                                 padding: const EdgeInsets.only(right: 10),
-                                                child: Text("Exp: 5 years",style: TextStyle(
+                                                child: Text(" | ${results[index]['experience']} Years",style: TextStyle(
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.w500
                                                 ),),
@@ -290,38 +335,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-}
-Future<void> getDoctorList(String accessToken) async {
-  try {
-    var apiUrl = 'https://temocare.com/api/sets/doctors/';
-    var response = await http.get(
-      Uri.parse(apiUrl),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      if(data['error']==null){
-        var responseData = data['response']['data']['results'];
-        print('Response Data: $responseData');
-        var success = data['response']['message']['success'];
-        var successCode = data['response']['message']['successCode'];
-        var statusCode = data['response']['message']['statusCode'];
-        var successMessage = data['response']['message']['successMessage'];
-        toastMessage(successMessage);
-      }
-      else{
-        String errorMessage = data['error']['errorMessage'];
-        print('Error: ${data['error']['errorMessage']}');
-        toastMessage(errorMessage);
-      }
-    } else {
-     // print('Error: ${response.statusCode}');
-    }
-  } catch (error) {
-    print('Error: $error');
   }
 }
 

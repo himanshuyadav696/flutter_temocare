@@ -3,12 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-
-class EditProfile extends StatefulWidget{
+class EditProfile extends StatelessWidget{
   @override
-  State<EditProfile> createState() => _EditProfileState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: _EditProfile(),
+    );
+  }
 }
-class _EditProfileState extends State<EditProfile>{
+
+
+class _EditProfile extends StatefulWidget{
+  @override
+  State<_EditProfile> createState() => _EditProfileState();
+}
+
+
+class _EditProfileState extends State<_EditProfile>{
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,7 +45,7 @@ class _EditProfileState extends State<EditProfile>{
                             ),
                           ),
                           onTap: (){
-                            Navigator.pop(context);
+                            Navigator.of(context);
                           },
                         ),
                       ],
@@ -85,9 +96,10 @@ class _EditProfileState extends State<EditProfile>{
                                   fontWeight: FontWeight.w400
                                 ),),
                               ),
-                              const Expanded(
+                              Expanded(
                                 child: TextField(
                                   maxLines: 1,
+                                  controller:TextEditingController(text: "Hello"),
                                   keyboardType: TextInputType.number,
                                   style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
                                   decoration: InputDecoration(
