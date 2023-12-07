@@ -1,25 +1,23 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-class EditProfile extends StatelessWidget{
+import 'package:temocare_flutter/screens/profileDetail.dart';
+
+class EditProfile extends StatefulWidget{
+  final ProfileData profileData;
+  EditProfile({required this.profileData});
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: _EditProfile(),
-    );
+  State<EditProfile> createState() => _EditProfileState();
+}
+class _EditProfileState extends State<EditProfile>{
+  late ProfileData showProfileData;
+  @override
+  void initState() {
+    super.initState();
+    showProfileData = widget.profileData;
+    print(showProfileData);
   }
-}
-
-
-class _EditProfile extends StatefulWidget{
-  @override
-  State<_EditProfile> createState() => _EditProfileState();
-}
-
-
-class _EditProfileState extends State<_EditProfile>{
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -99,7 +97,7 @@ class _EditProfileState extends State<_EditProfile>{
                               Expanded(
                                 child: TextField(
                                   maxLines: 1,
-                                  controller:TextEditingController(text: "Hello"),
+                                  controller:TextEditingController(text:"${showProfileData.fullName} ${showProfileData.lastName}"),
                                   keyboardType: TextInputType.number,
                                   style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
                                   decoration: InputDecoration(
@@ -137,9 +135,10 @@ class _EditProfileState extends State<_EditProfile>{
                                     fontWeight: FontWeight.w400
                                 ),),
                               ),
-                              const Expanded(
+                              Expanded(
                                 child: TextField(
                                   maxLines: 1,
+                                  controller:TextEditingController(text:showProfileData.lastName),
                                   keyboardType: TextInputType.name,
                                   style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
                                   decoration: InputDecoration(
@@ -177,9 +176,10 @@ class _EditProfileState extends State<_EditProfile>{
                                     fontWeight: FontWeight.w400
                                 ),),
                               ),
-                              const Expanded(
+                              Expanded(
                                 child: TextField(
                                   maxLines: 1,
+                                  controller: TextEditingController(text: showProfileData.email),
                                   keyboardType: TextInputType.emailAddress,
                                   style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
                                   decoration: InputDecoration(
@@ -217,9 +217,10 @@ class _EditProfileState extends State<_EditProfile>{
                                     fontWeight: FontWeight.w400
                                 ),),
                               ),
-                              const Expanded(
+                              Expanded(
                                 child: TextField(
                                   maxLines: 1,
+                                  controller: TextEditingController(text:showProfileData.age),
                                   keyboardType: TextInputType.number,
                                   style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
                                   decoration: InputDecoration(
@@ -257,9 +258,10 @@ class _EditProfileState extends State<_EditProfile>{
                                     fontWeight: FontWeight.w400
                                 ),),
                               ),
-                              const Expanded(
+                              Expanded(
                                 child: TextField(
                                   maxLines: 1,
+                                  controller: TextEditingController(text: showProfileData.gender),
                                   keyboardType: TextInputType.text,
                                   style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
                                   decoration: InputDecoration(

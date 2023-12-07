@@ -217,7 +217,13 @@ class _ProfileState extends State<ProfileDetail>{
                             onTap: (){
                               Navigator.push(context, MaterialPageRoute(
                                   builder: (context){
-                                return EditProfile();
+                                return EditProfile(profileData:ProfileData(
+                                  fullName: fullName,
+                                  lastName: lastName,
+                                  email: email,
+                                  age: age,
+                                  gender: gender
+                                ));
                               }));
                             },
                           ),
@@ -398,5 +404,18 @@ class DeleteAlert extends StatelessWidget{
     );
   }
 }
-
+class ProfileData {
+  final String fullName;
+  final String lastName;
+  final String email;
+  final String age;
+  final String gender;
+  ProfileData({
+    required this.fullName,
+    required this.lastName,
+    required this.email,
+    required this.age,
+    required this.gender
+  });
+}
 

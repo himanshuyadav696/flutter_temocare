@@ -6,16 +6,17 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:temocare_flutter/screens/RegisterationScreen.dart';
 import 'package:temocare_flutter/screens/Splash.dart';
+import 'package:temocare_flutter/sharedPreferences/SessionManager.dart';
 import 'package:temocare_flutter/sharedPreferences/SharedPreferencesUtil.dart';
 import 'Api/ApiConstants.dart';
 import 'apputils/utils.dart';
 import 'screens/HomeScreen.dart';
 import 'screens/forgotEmail.dart';
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp(title: 'Hello',));
 }
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required String title});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -68,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
           await SharedPreferencesUtil.saveString("accessToken", accessToken);
           await SharedPreferencesUtil.saveString("profilePic", profilePic);
           await SharedPreferencesUtil.saveBool("isLoginFirst", true);
+          await SessionManager.setLoggedIn(true);
           print('User ID: $userId');
           print('Name: $firstName $lastName');
           print("accessToken $accessToken");

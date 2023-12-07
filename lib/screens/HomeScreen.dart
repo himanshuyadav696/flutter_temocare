@@ -31,7 +31,6 @@ class _HomePageState extends State<HomePage> {
   var profile;
   var accessToken;
   var results = [];
-
   @override
   void initState() {
     super.initState();
