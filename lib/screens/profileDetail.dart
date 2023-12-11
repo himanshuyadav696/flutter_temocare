@@ -22,9 +22,9 @@ class _ProfileState extends State<ProfileDetail>{
   String profilePic ="";
   @override
   void initState() {
-    getDoctorList();
+    getUserProfile();
   }
-  Future<void> getDoctorList() async {
+  Future<void> getUserProfile() async {
     var accessToken = (await SharedPreferencesUtil.getString("accessToken"))!;
     try {
       var apiUrl = 'https://temocare.com/api/profile/';
@@ -131,7 +131,17 @@ class _ProfileState extends State<ProfileDetail>{
                                 children: [
                                   Text("Email",maxLines: 1,
                                     style: TextStyle(fontSize: 18,fontWeight: FontWeight.w400,color: Colors.grey),),
-                                  Text(email,maxLines: 1,style: TextStyle(fontSize: 18,fontWeight: FontWeight.w400,color: Colors.black),),
+                                  Flexible(
+                                    child: Text(
+                                      email,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black,
+                                      ),),
+                                  ),
                                 ],
                               ),
                             ),
@@ -214,17 +224,20 @@ class _ProfileState extends State<ProfileDetail>{
                                 ),)),
                               ),
                             ),
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(
+                            onTap: () async {
+                              await Navigator.push(context, MaterialPageRoute(
                                   builder: (context){
-                                return EditProfile(profileData:ProfileData(
+                                return EditProfile(
+                                  profileData:ProfileData(
                                   fullName: fullName,
                                   lastName: lastName,
                                   email: email,
                                   age: age,
-                                  gender: gender
-                                ));
+                                  gender: gender,
+                                  profilePic: profilePic
+                                ),);
                               }));
+                              getUserProfile();
                             },
                           ),
                         ),
@@ -410,12 +423,14 @@ class ProfileData {
   final String email;
   final String age;
   final String gender;
+  final String profilePic;
   ProfileData({
     required this.fullName,
     required this.lastName,
     required this.email,
     required this.age,
-    required this.gender
+    required this.gender,
+    required this.profilePic
   });
 }
 

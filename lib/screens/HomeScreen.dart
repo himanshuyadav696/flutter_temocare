@@ -4,9 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:temocare_flutter/Api/ApiConstants.dart';
+import 'package:temocare_flutter/screens/BookNow.dart';
 import 'package:temocare_flutter/screens/myAppointment.dart';
 import 'package:temocare_flutter/screens/profileDetail.dart';
 import 'package:temocare_flutter/sharedPreferences/SharedPreferencesUtil.dart';
+import '../Models/DoctorData.dart';
 import '../apputils/utils.dart';
 import 'doctorDetail.dart';
 class HomeScreen extends StatelessWidget{
@@ -37,7 +39,6 @@ class _HomePageState extends State<HomePage> {
     _initSharedPreferences();
     getDoctorList();
   }
-
   Future<void> getDoctorList() async {
     try {
       var apiUrl = ApiConstants.baseUrl+ApiConstants.getDoctorListEndPoint;
@@ -68,7 +69,7 @@ class _HomePageState extends State<HomePage> {
           toastMessage(errorMessage);
         }
       } else {
-        // print('Error: ${response.statusCode}');
+         print('Error: ${response.statusCode}');
       }
     } catch (error) {
       print('Error: $error');
@@ -105,11 +106,13 @@ class _HomePageState extends State<HomePage> {
           children: [
             IconButton(onPressed: (){
 
-            }, icon: Icon(
-                Icons.home
-            )),
+            },
+                icon: Icon(Icons.home,),
+            ),
             IconButton(onPressed: (){
-
+              Navigator.push(context, MaterialPageRoute(builder: (context){
+                return BookNow();
+              }));
             }, icon: Icon(
                 Icons.calendar_month
             )),
@@ -213,8 +216,7 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 20),
+                            Flexible(
                               child: SizedBox(
                                   height: 200,
                                   width: 100,
@@ -293,7 +295,18 @@ class _HomePageState extends State<HomePage> {
                                                 child: InkWell(
                                                   onTap: (){
                                                     Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                      return doctorDetail();
+                                                      return  DoctorDetail(doctorData:DoctorData(
+                                                          doctorId: results[index]["doctor_id"].toString(),
+                                                          doctorName: results[index]["fullName"],
+                                                          specialization: results[index]["specialization"],
+                                                          quali: results[index]["qualifi"],
+                                                          experience: results[index]["experience"],
+                                                          descrition: results[index]["description"],
+                                                          rating: results[index]["ratings"],
+                                                          reviews: results[index]["reviews"].toString(),
+                                                        successfull_patients: results[index]["successfull_patients"].toString(),
+                                                        fees: results[index]["fee"].toString()
+                                                      ));
                                                     }));
                                                   },
                                                   child: Padding(
@@ -307,11 +320,13 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                       child: Container(
                                                         alignment: Alignment.center,
-                                                        child: Text("Appointment",style: TextStyle(
-                                                            color: HexColor("#ED787E"),
-                                                            fontWeight: FontWeight.w400,
-                                                            fontSize: 16
-                                                        ),),
+                                                        child: Expanded(
+                                                          child: Text("Appointment",style: TextStyle(
+                                                              color: HexColor("#ED787E"),
+                                                              fontWeight: FontWeight.w400,
+                                                              fontSize: 16
+                                                          ),),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),

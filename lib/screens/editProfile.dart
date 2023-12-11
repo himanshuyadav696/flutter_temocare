@@ -1,8 +1,14 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:temocare_flutter/Api/ApiConstants.dart';
 import 'package:temocare_flutter/screens/profileDetail.dart';
+import 'package:http/http.dart' as http;
+import '../apputils/utils.dart';
+import '../sharedPreferences/SharedPreferencesUtil.dart';
 
 class EditProfile extends StatefulWidget{
   final ProfileData profileData;
@@ -12,11 +18,22 @@ class EditProfile extends StatefulWidget{
 }
 class _EditProfileState extends State<EditProfile>{
   late ProfileData showProfileData;
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController age = TextEditingController();
+  TextEditingController gender = TextEditingController();
+  String profilePc = "";
   @override
   void initState() {
     super.initState();
     showProfileData = widget.profileData;
-    print(showProfileData);
+    firstName = TextEditingController(text: showProfileData.fullName);
+    lastName = TextEditingController(text: showProfileData.lastName);
+    email = TextEditingController(text: showProfileData.email);
+    age = TextEditingController(text: showProfileData.age);
+    gender = TextEditingController(text: showProfileData.gender);
+    profilePc = showProfileData.profilePic;
   }
   @override
   Widget build(BuildContext context) {
@@ -43,7 +60,7 @@ class _EditProfileState extends State<EditProfile>{
                             ),
                           ),
                           onTap: (){
-                            Navigator.of(context);
+                            Navigator.pop(context);
                           },
                         ),
                       ],
@@ -60,7 +77,9 @@ class _EditProfileState extends State<EditProfile>{
                               child: Card(
                                 elevation: 4,
                                 shape: CircleBorder(),
-                                child: SvgPicture.asset("assests/images/ic_google.svg"),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(360),
+                                    child: Image.network(profilePc.toString())),
                               ),
                             ),
                           ),
@@ -97,8 +116,8 @@ class _EditProfileState extends State<EditProfile>{
                               Expanded(
                                 child: TextField(
                                   maxLines: 1,
-                                  controller:TextEditingController(text:"${showProfileData.fullName} ${showProfileData.lastName}"),
-                                  keyboardType: TextInputType.number,
+                                  controller:firstName,
+                                  keyboardType: TextInputType.text,
                                   style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
@@ -138,7 +157,7 @@ class _EditProfileState extends State<EditProfile>{
                               Expanded(
                                 child: TextField(
                                   maxLines: 1,
-                                  controller:TextEditingController(text:showProfileData.lastName),
+                                  controller:lastName,
                                   keyboardType: TextInputType.name,
                                   style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
                                   decoration: InputDecoration(
@@ -179,7 +198,7 @@ class _EditProfileState extends State<EditProfile>{
                               Expanded(
                                 child: TextField(
                                   maxLines: 1,
-                                  controller: TextEditingController(text: showProfileData.email),
+                                  controller: email,
                                   keyboardType: TextInputType.emailAddress,
                                   style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
                                   decoration: InputDecoration(
@@ -220,7 +239,7 @@ class _EditProfileState extends State<EditProfile>{
                               Expanded(
                                 child: TextField(
                                   maxLines: 1,
-                                  controller: TextEditingController(text:showProfileData.age),
+                                  controller: age,
                                   keyboardType: TextInputType.number,
                                   style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
                                   decoration: InputDecoration(
@@ -261,7 +280,7 @@ class _EditProfileState extends State<EditProfile>{
                               Expanded(
                                 child: TextField(
                                   maxLines: 1,
-                                  controller: TextEditingController(text: showProfileData.gender),
+                                  controller: gender,
                                   keyboardType: TextInputType.text,
                                   style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
                                   decoration: InputDecoration(
@@ -279,7 +298,7 @@ class _EditProfileState extends State<EditProfile>{
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 20,bottom: 20),
                 child: Container(
                   width: double.infinity,
                   child: Padding(
@@ -291,11 +310,21 @@ class _EditProfileState extends State<EditProfile>{
                           height: 60,
                           child: ElevatedButton(
                             style: ButtonStyle(
-                              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)))
+                                backgroundColor: MaterialStateProperty.all(Colors.pink),
+                              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                              ))
                             ),
                               onPressed: (){
-                              Navigator.pop(context);
-                              },
+                              postUpdateProfil(
+                                  firstName.text,
+                                  lastName.text,
+                                  email.text,
+                                  age.text,
+                                  gender.text,
+                                  profilePc,
+                                  context
+                              );},
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
                                 child: Text("Update",style: TextStyle(
@@ -319,7 +348,8 @@ class _EditProfileState extends State<EditProfile>{
                                 padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
                                 child: Text("Cancel",style: TextStyle(
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w600
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.pink
                                 ),
                                 ),
                               )),
@@ -328,12 +358,67 @@ class _EditProfileState extends State<EditProfile>{
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
+}
+void postUpdateProfil(
+    String firstName,
+    String lastName,
+    String email,
+    String age,
+    String gender,
+    String profilePc,
+    BuildContext context
+    ) async {
+  var accessToken = (await SharedPreferencesUtil.getString("accessToken"))!;
+  final response = await http.post(Uri.parse(ApiConstants.baseUrl + ApiConstants.postUpdateProfile),
+    body: {
+      'first_name': firstName,
+      'last_name': lastName,
+      'gender': gender,
+      'email' :email,
+      'deviceType':"1",
+      'age':age,
+      'pic':profilePc
+    },
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+    },
+  );
+  print('Request Body: ${json.encode(response.toString())}');
+  try {
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if (data['error'] == null) {
+        if(data['data']==null){
+          print("API Response: ${response.body}");
+          var success = data['response']['message']['success'];
+          var successCode = data['response']['message']['successCode'];
+          var statusCode = data['response']['message']['statusCode'];
+          var successMessage = data['response']['message']['successMessage'];
+          print(success);
+          print(successCode);
+          print(statusCode);
+          toastMessage(successMessage);
+          Navigator.pop(context);
+        }
+        else{
+          print("API Response: ${response.body}");
+        }
+      } else {
+        String errorMessage = data['error']['errorMessage'];
+        print('Error: ${data['error']['errorMessage']}');
+        toastMessage(errorMessage);
+      }
+    } else {
+      print('Error: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error: $error');
+  }
 }
