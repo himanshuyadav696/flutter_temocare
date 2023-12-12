@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '../Models/DoctorData.dart';
+import 'ScheduleScreen.dart';
 
 class DoctorDetail extends StatefulWidget{
   final DoctorData doctorData;
@@ -271,6 +272,9 @@ class _DoctorDetailState extends State<DoctorDetail> {
                      Padding(
                        padding: EdgeInsets.only(top: 40,left: 20,right: 20),
                        child: ElevatedButton(onPressed: (){
+                         Navigator.push(context,MaterialPageRoute(builder: (context){
+                           return ScheduleScreen();
+                         }));
                        },
                          style: ButtonStyle(
                              backgroundColor: MaterialStateProperty.all(Colors.pink),
