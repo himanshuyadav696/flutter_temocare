@@ -6,7 +6,7 @@ import 'ScheduleScreen.dart';
 
 class DoctorDetail extends StatefulWidget{
   final DoctorData doctorData;
-  DoctorDetail({required this.doctorData} );
+  DoctorDetail({super.key, required this.doctorData} );
   @override
   State<DoctorDetail> createState() => _DoctorDetailState();
 }
@@ -273,7 +273,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
                        padding: EdgeInsets.only(top: 40,left: 20,right: 20),
                        child: ElevatedButton(onPressed: (){
                          Navigator.push(context,MaterialPageRoute(builder: (context){
-                           return ScheduleScreen();
+                           return ScheduleScreen(doctorId:showDoctorData.doctorId);
                          }));
                        },
                          style: ButtonStyle(
