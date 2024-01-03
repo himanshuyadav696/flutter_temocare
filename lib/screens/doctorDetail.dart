@@ -6,7 +6,7 @@ import 'ScheduleScreen.dart';
 
 class DoctorDetail extends StatefulWidget{
   final DoctorData doctorData;
-  DoctorDetail({super.key, required this.doctorData} );
+  const DoctorDetail({super.key, required this.doctorData} );
   @override
   State<DoctorDetail> createState() => _DoctorDetailState();
 }
@@ -43,7 +43,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
                                    Navigator.pop(context);
                                  },
                                ),
-                               Expanded(
+                               const Expanded(
                                  child: Text(
                                    "Doctor Detail",style: TextStyle(
                                    color: Colors.white,
@@ -53,7 +53,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
                                    textAlign: TextAlign.center,
                                  ),
                                ),
-                               SizedBox(
+                               const SizedBox(
                                  width: 58,
                                  height: 58,
                                )
@@ -67,32 +67,32 @@ class _DoctorDetailState extends State<DoctorDetail> {
                        height: 380,
                        decoration: BoxDecoration(
                          color: HexColor("#F2A56F"),
-                         borderRadius: BorderRadius.only(bottomLeft:Radius.circular(30)),
+                         borderRadius: const BorderRadius.only(bottomLeft:Radius.circular(30)),
                        ),
                        child: Padding(
-                         padding: EdgeInsets.only(top: 30,bottom: 50,right: 150),
+                         padding: const EdgeInsets.only(top: 30,bottom: 50,right: 150),
                          child: Container(
-                           decoration: BoxDecoration(
+                           decoration: const BoxDecoration(
                              color: Colors.black12,
                              borderRadius: BorderRadius.only(topRight:Radius.circular(30),bottomRight: Radius.circular(30)),
                            ),
                            child: Padding(
-                             padding:  EdgeInsets.only(left: 20,right: 16,bottom: 16,top: 30),
+                             padding:  const EdgeInsets.only(left: 20,right: 16,bottom: 16,top: 30),
                              child: Column(
                                crossAxisAlignment: CrossAxisAlignment.start,
                                children: [
                                  Text(showDoctorData.doctorName,
-                                   style: TextStyle(
+                                   style: const TextStyle(
                                      color: Colors.white,
                                      fontSize: 18,
                                      fontWeight: FontWeight.w600
                                    ),
                                  ),
-                                 SizedBox(
+                                 const SizedBox(
                                    height: 5,
                                  ),
                                  Text(showDoctorData.specialization,
-                                   style: TextStyle(
+                                   style: const TextStyle(
                                        color: Colors.white,
                                        fontSize: 14,
                                        fontWeight: FontWeight.w400
@@ -105,18 +105,18 @@ class _DoctorDetailState extends State<DoctorDetail> {
                                      children: [
                                        Card(
                                          color: Colors.white24,
-                                         child: Padding(padding: EdgeInsets.all(5),
+                                         child: Padding(padding: const EdgeInsets.all(5),
                                          child: SvgPicture.asset("assests/images/patient.svg")),
                                        ),
-                                       SizedBox(
+                                       const SizedBox(
                                          width: 15,
                                        ),
                                        Padding(
-                                         padding: EdgeInsets.only(top: 5),
+                                         padding: const EdgeInsets.only(top: 5),
                                          child: Column(
                                            crossAxisAlignment: CrossAxisAlignment.start,
                                            children: [
-                                             Text("Patient",
+                                             const Text("Patient",
                                                style: TextStyle(
                                                  color: Colors.white,
                                                  fontSize: 14,
@@ -126,7 +126,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
                                              Padding(
                                                padding: const EdgeInsets.only(top: 3),
                                                child: Text(showDoctorData.successfull_patients,
-                                                 style: TextStyle(
+                                                 style: const TextStyle(
                                                      color: Colors.white,
                                                      fontSize: 18,
                                                      fontWeight: FontWeight.w600
@@ -146,18 +146,18 @@ class _DoctorDetailState extends State<DoctorDetail> {
                                      children: [
                                        Card(
                                          color: Colors.white24,
-                                         child: Padding(padding: EdgeInsets.all(5),
+                                         child: Padding(padding: const EdgeInsets.all(5),
                                              child: SvgPicture.asset("assests/images/patient.svg")),
                                        ),
-                                       SizedBox(
+                                       const SizedBox(
                                          width: 15,
                                        ),
                                        Padding(
-                                         padding: EdgeInsets.only(top: 5),
+                                         padding: const EdgeInsets.only(top: 5),
                                          child: Column(
                                            crossAxisAlignment: CrossAxisAlignment.start,
                                            children: [
-                                             Text("Experience",
+                                             const Text("Experience",
                                                style: TextStyle(
                                                    color: Colors.white,
                                                    fontSize: 14,
@@ -167,7 +167,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
                                              Padding(
                                                padding: const EdgeInsets.only(top: 3),
                                                child: Text("${showDoctorData.experience} Years",
-                                                 style: TextStyle(
+                                                 style: const TextStyle(
                                                      color: Colors.white,
                                                      fontSize: 18,
                                                      fontWeight: FontWeight.w600
@@ -187,17 +187,17 @@ class _DoctorDetailState extends State<DoctorDetail> {
                                      children: [
                                        Card(
                                          color: Colors.white24,
-                                         child: Padding(padding: EdgeInsets.all(5),
+                                         child: Padding(padding: const EdgeInsets.all(5),
                                              child: SvgPicture.asset("assests/images/patient.svg")),
                                        ),
-                                       SizedBox(
+                                       const SizedBox(
                                          width: 15,
                                        ),
                                        Padding(
-                                         padding: EdgeInsets.only(top: 5),
+                                         padding: const EdgeInsets.only(top: 5),
                                          child: Column(
                                            children: [
-                                             Text("Fees",
+                                             const Text("Fees",
                                                style: TextStyle(
                                                    color: Colors.white,
                                                    fontSize: 14,
@@ -207,7 +207,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
                                              Padding(
                                                padding: const EdgeInsets.only(top: 3),
                                                child: Text("\$ ${showDoctorData.fees}",
-                                                 style: TextStyle(
+                                                 style: const TextStyle(
                                                      color: Colors.white,
                                                      fontSize: 18,
                                                      fontWeight: FontWeight.w600
@@ -226,7 +226,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
                          ),
                        ),
                      ),
-                     SizedBox(
+                     const SizedBox(
                        height: 20,
                      ),
                      Padding(
@@ -235,7 +235,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                          children:
                          [
-                           Text("About",
+                           const Text("About",
                            style: TextStyle(
                                color: Colors.black,
                                fontSize: 25,
@@ -244,12 +244,12 @@ class _DoctorDetailState extends State<DoctorDetail> {
                            Row(
                              children: [
                                SvgPicture.asset("assests/images/star.svg"),
-                               Text(showDoctorData.rating,style: TextStyle(
+                               Text(showDoctorData.rating,style: const TextStyle(
                                    color: Colors.black,
                                  fontSize: 14,
                                  fontWeight: FontWeight.w500
                                ),),
-                               Text("(${showDoctorData.reviews} Reviews)",style: TextStyle(
+                               Text("(${showDoctorData.reviews} Reviews)",style: const TextStyle(
                                    fontSize: 14,
                                    fontWeight: FontWeight.w300
                                ),)
@@ -258,8 +258,8 @@ class _DoctorDetailState extends State<DoctorDetail> {
                          ],
                        ),
                      ),
-                     Padding(
-                       padding: const EdgeInsets.only(top: 10,left: 20,right: 20),
+                     const Padding(
+                       padding: EdgeInsets.only(top: 10,left: 20,right: 20),
                        child: Text(
                          "Dr. Amin is a member of the American Association of Neurological Surgeons, the Congress of Neurological Surgeons, AANS/CNS Joint Section on Disorders of the Spine and Peripheral Nerves, and the North American Spine Society.",
                          style: TextStyle(
@@ -270,7 +270,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
                        ),
                      ),
                      Padding(
-                       padding: EdgeInsets.only(top: 40,left: 20,right: 20),
+                       padding: const EdgeInsets.only(top: 40,left: 20,right: 20),
                        child: ElevatedButton(onPressed: (){
                          Navigator.push(context,MaterialPageRoute(builder: (context){
                            return ScheduleScreen(doctorId:showDoctorData.doctorId);
@@ -285,8 +285,8 @@ class _DoctorDetailState extends State<DoctorDetail> {
                          child: Container(
                            alignment: Alignment.center,
                            width: double.infinity,
-                           child: Padding(
-                             padding: const EdgeInsets.all(15.0),
+                           child: const Padding(
+                             padding: EdgeInsets.all(15.0),
                              child: Text("Scheduled an appointment",style: TextStyle(
                                  fontSize: 17,
                                  fontWeight: FontWeight.w500,

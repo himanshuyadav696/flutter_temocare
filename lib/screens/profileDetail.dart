@@ -20,12 +20,16 @@ class _ProfileState extends State<ProfileDetail>{
   String age="";
   String gender="";
   String profilePic ="";
+  bool _loading = false;
   @override
   void initState() {
     getUserProfile();
   }
   Future<void> getUserProfile() async {
     var accessToken = (await SharedPreferencesUtil.getString("accessToken"))!;
+    setState(() {
+      _loading = true;
+    });
     try {
       var apiUrl = 'https://temocare.com/api/profile/';
       var response = await http.get(
@@ -47,6 +51,7 @@ class _ProfileState extends State<ProfileDetail>{
             profilePic = data['response']['data']['profile_image_url'];
             var success= data['response']['message']['successMessage'];
             toastMessage(success);
+            _loading = false;
           });
           print(responseData);
           print(fullName);
@@ -61,12 +66,19 @@ class _ProfileState extends State<ProfileDetail>{
           String errorMessage = data['error']['errorMessage'];
           print('Error: ${data['error']['errorMessage']}');
           toastMessage(errorMessage);
+          setState(() {
+            _loading = false;
+          });
         }
       } else {
+
         // print('Error: ${response.statusCode}');
       }
     } catch (error) {
       print('Error: $error');
+      setState(() {
+        _loading = false;
+      });
     }
   }
   @override
@@ -102,15 +114,15 @@ class _ProfileState extends State<ProfileDetail>{
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("$fullName $lastName",style: TextStyle(
+                            Text("$fullName $lastName",style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.black,
                               fontSize: 25,
                             ),),
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
-                            Container(
+                            const SizedBox(
                               width: double.infinity,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,22 +133,22 @@ class _ProfileState extends State<ProfileDetail>{
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
-                            Container(
+                            SizedBox(
                               width: double.infinity,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Email",maxLines: 1,
+                                  const Text("Email",maxLines: 1,
                                     style: TextStyle(fontSize: 18,fontWeight: FontWeight.w400,color: Colors.grey),),
                                   Flexible(
                                     child: Text(
                                       email,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w400,
                                           color: Colors.black,
@@ -145,35 +157,35 @@ class _ProfileState extends State<ProfileDetail>{
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
-                            Container(
+                            SizedBox(
                               width: double.infinity,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Age",maxLines: 1,
+                                  const Text("Age",maxLines: 1,
                                     style: TextStyle(fontSize: 18,fontWeight: FontWeight.w400,color: Colors.grey),),
-                                  Text(age,maxLines: 1,style: TextStyle(fontSize: 18,fontWeight: FontWeight.w400,color: Colors.black),),
+                                  Text(age,maxLines: 1,style: const TextStyle(fontSize: 18,fontWeight: FontWeight.w400,color: Colors.black),),
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
-                            Container(
+                            SizedBox(
                               width: double.infinity,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Gender",maxLines: 1,
+                                  const Text("Gender",maxLines: 1,
                                     style: TextStyle(fontSize: 18,fontWeight: FontWeight.w400,color: Colors.grey),),
-                                  Text(gender,maxLines: 1,style: TextStyle(fontSize: 18,fontWeight: FontWeight.w400,color: Colors.black),),
+                                  Text(gender,maxLines: 1,style: const TextStyle(fontSize: 18,fontWeight: FontWeight.w400,color: Colors.black),),
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
                           ],
@@ -191,7 +203,7 @@ class _ProfileState extends State<ProfileDetail>{
                             height: 100,
                             width: 100,
                             child: Container(
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 shape: BoxShape.circle, // or any other shape
                               ),
                               child: ClipRRect(
@@ -214,10 +226,10 @@ class _ProfileState extends State<ProfileDetail>{
                               child: Card(
                                 elevation: 4,
                                 shape: RoundedRectangleBorder(
-                                  side: BorderSide(color: Colors.pink, width: 1),
+                                  side: const BorderSide(color: Colors.pink, width: 1),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
-                                child: Center(child: Text("Edit",style: TextStyle(
+                                child: const Center(child: Text("Edit",style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 16,
                                   color: Colors.pink
@@ -254,19 +266,19 @@ class _ProfileState extends State<ProfileDetail>{
                     OutlinedButton(
                         onPressed: (){
                           Navigator.push(context,MaterialPageRoute(builder: (context){
-                            return ChangePassword();
+                            return const ChangePassword();
                           }));
                     },
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         )),
-                        side: MaterialStateProperty.all(BorderSide(
+                        side: MaterialStateProperty.all(const BorderSide(
                           color: Colors.pink,
                         )),
                       ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
                           child: Text("Change Password",style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
@@ -287,7 +299,7 @@ class _ProfileState extends State<ProfileDetail>{
                                   ),
                                   child: Stack(
                                     children: [
-                                      Container(
+                                      SizedBox(
                                         height: 300,
                                         child: Center(
                                           child: Padding(
@@ -296,12 +308,12 @@ class _ProfileState extends State<ProfileDetail>{
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 SvgPicture.asset("assests/images/ic_delete.svg"),
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top: 20),
+                                                const Padding(
+                                                  padding: EdgeInsets.only(top: 20),
                                                   child: Text("Are you sure ?",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 24),),
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets.only(left: 16,right: 16,top: 20),
+                                                const Padding(
+                                                  padding: EdgeInsets.only(left: 16,right: 16,top: 20),
                                                   child: Center(child: Text("You want to delete your account this action can’t be undone",textAlign: TextAlign.center,style: TextStyle(height: 1.5,color: Colors.grey,fontWeight: FontWeight.w400,fontSize: 16),)),
                                                 ),
                                                 Padding(
@@ -309,7 +321,7 @@ class _ProfileState extends State<ProfileDetail>{
                                                   child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                     children: [
-                                                      Container(
+                                                      SizedBox(
                                                         height: 50,
                                                         child: ElevatedButton(
                                                             style: ButtonStyle(
@@ -318,8 +330,8 @@ class _ProfileState extends State<ProfileDetail>{
                                                             onPressed: (){
                                                               Navigator.pop(context);
                                                             },
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                                            child: const Padding(
+                                                              padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
                                                               child: Text("Yes",style: TextStyle(
                                                                   fontSize: 20,
                                                                   fontWeight: FontWeight.w600,
@@ -327,18 +339,18 @@ class _ProfileState extends State<ProfileDetail>{
                                                               ),
                                                             )),
                                                       ),
-                                                      Container(
+                                                      SizedBox(
                                                         height: 50,
                                                         child: OutlinedButton(
                                                             style: ButtonStyle(
                                                                 shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
-                                                                side: MaterialStateProperty.all(BorderSide(color: Colors.pink,width: 2))
+                                                                side: MaterialStateProperty.all(const BorderSide(color: Colors.pink,width: 2))
                                                             ),
                                                             onPressed: (){
                                                               Navigator.pop(context);
                                                             },
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                                            child: const Padding(
+                                                              padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
                                                               child: Text("No",style: TextStyle(
                                                                   fontSize: 20,
                                                                   fontWeight: FontWeight.w600
@@ -379,8 +391,8 @@ class _ProfileState extends State<ProfileDetail>{
                               borderRadius: BorderRadius.circular(30),
                             ))
                           ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
                           child: Text("Delete Account",style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
@@ -401,6 +413,8 @@ class _ProfileState extends State<ProfileDetail>{
 }
 
 class DeleteAlert extends StatelessWidget{
+  const DeleteAlert({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

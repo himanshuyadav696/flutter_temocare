@@ -5,4 +5,5 @@ class ApiConstants {
   static String postChangePassword = 'change-password/';
   static String postUpdateProfile = 'update-profile/';
   static String postDateByDoctorId = 'get_doctor_slots/';
+  static String postSlots = 'get_slots_by_date/';
 }

@@ -1,13 +1,12 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:temocare_flutter/screens/AppointmentDetail.dart';
 class myAppointment extends StatelessWidget{
   const myAppointment({super.key});
 
   @override
   Widget build(BuildContext context) {
-    TabController? _tabController;
+    TabController? tabController;
     return WillPopScope(
       onWillPop: () async{
         Navigator.pop(context);
@@ -19,25 +18,20 @@ class myAppointment extends StatelessWidget{
           length: 3,
           child: Scaffold(
             appBar: AppBar(
-              systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: Colors.white,
-                statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-                statusBarBrightness: Brightness.light, // For iOS (dark icons)
-              ),
               elevation: 0,
               backgroundColor: Colors.white,
               bottom:  TabBar(
-                controller: _tabController,
+                controller: tabController,
                 unselectedLabelColor: Colors.black,
                 labelColor: Colors.pink,
                 indicatorColor: Colors.pink,
-                tabs: [
+                tabs: const [
                   Tab(text: "Upcoming",),
                   Tab(text: "Completed",),
                   Tab(text: "Cancelled",),
                 ],
               ),
-              title: Row(
+              title: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("My Appointments",style: TextStyle(
@@ -46,7 +40,7 @@ class myAppointment extends StatelessWidget{
                 ],
               ),
             ),
-            body:TabBarView(
+            body:const TabBarView(
               children: [
                 UpComing(),
                 UpComing(),
@@ -69,7 +63,7 @@ class _UpComing extends State<UpComing>{
   @override
   Widget build(BuildContext context) {
    return ListView.builder(
-       physics: BouncingScrollPhysics(),
+       physics: const BouncingScrollPhysics(),
        shrinkWrap: true,
        itemCount: 5,
        scrollDirection: Axis.vertical,
@@ -82,7 +76,7 @@ class _UpComing extends State<UpComing>{
              decoration: BoxDecoration(
                border: Border.all(color: Colors.grey),
                color: Colors.white,
-               borderRadius: BorderRadius.all(Radius.circular(20)),
+               borderRadius: const BorderRadius.all(Radius.circular(20)),
              ),
              child: Row(
                children: [
@@ -93,7 +87,7 @@ class _UpComing extends State<UpComing>{
                      width: 65,
                      decoration: BoxDecoration(
                          border: Border.all(color: Colors.black),
-                         borderRadius: BorderRadius.all(Radius.circular(10))
+                         borderRadius: const BorderRadius.all(Radius.circular(10))
                      ),
                      child: ClipRRect(
                          borderRadius: BorderRadius.circular(8),
@@ -106,15 +100,15 @@ class _UpComing extends State<UpComing>{
                    child: Column(
                      crossAxisAlignment: CrossAxisAlignment.start,
                      children: [
-                       Text("Doctor",style: TextStyle(
+                       const Text("Doctor",style: TextStyle(
                          color: Colors.black,
                          fontSize: 20,
                          fontWeight: FontWeight.w500,
                        ),),
-                       SizedBox(height: 5,),
+                       const SizedBox(height: 5,),
                        Row(
                          children: [
-                           Text("Videocall - ",style: TextStyle(
+                           const Text("Videocall - ",style: TextStyle(
                              fontSize: 16,
                              color: Colors.grey,
                              fontWeight: FontWeight.w400,
@@ -124,8 +118,8 @@ class _UpComing extends State<UpComing>{
                                  border: Border.all(color: Colors.amber),
                                  borderRadius: BorderRadius.circular(5)
                              ),
-                             child: Padding(
-                               padding: const EdgeInsets.only(left: 14,right: 14,top: 5,bottom: 5),
+                             child: const Padding(
+                               padding: EdgeInsets.only(left: 14,right: 14,top: 5,bottom: 5),
                                child: Text(
                                  "Upcoming",
                                  style: TextStyle(
@@ -138,8 +132,8 @@ class _UpComing extends State<UpComing>{
                            )
                          ],
                        ),
-                       SizedBox(height: 10,),
-                       Row(
+                       const SizedBox(height: 10,),
+                       const Row(
                          children: [
                            Text("Dec 12, 2021   |   16:00 PM",style: TextStyle(
                              fontSize: 13,
@@ -148,52 +142,54 @@ class _UpComing extends State<UpComing>{
                            ),),
                          ],
                        ),
-                       Padding(
-                         padding: const EdgeInsets.only(top: 10),
-                         child: Row(
-                           children: [
-                             Container(
-                               width: 93,
-                               height: 33,
-                               decoration: BoxDecoration(
-                                 borderRadius: BorderRadius.circular(10),
-                                 border: Border.all(color: Colors.pink)
+                       Flexible(
+                         child: Padding(
+                           padding: const EdgeInsets.only(top: 5,bottom: 5),
+                           child: Row(
+                             children: [
+                               Container(
+                                 width: 93,
+                                 height: 33,
+                                 decoration: BoxDecoration(
+                                   borderRadius: BorderRadius.circular(10),
+                                   border: Border.all(color: Colors.pink)
+                                 ),
+                                 child: const Center(
+                                   child: Text("Cancel",style: TextStyle(
+                                     color: Colors.pink,
+                                     fontSize: 20,
+                                     fontWeight: FontWeight.w400
+                                   ),),
+                                 ),
                                ),
-                               child: Center(
-                                 child: Text("Cancel",style: TextStyle(
-                                   color: Colors.pink,
-                                   fontSize: 20,
-                                   fontWeight: FontWeight.w400
-                                 ),),
-                               ),
-                             ),
-                             Padding(
-                               padding: const EdgeInsets.only(left: 15),
-                               child: GestureDetector(
-                                 onTap: (){
-                                   Navigator.push(context,MaterialPageRoute(builder: (context){
-                                     return AppointmentDetail();
-                                   }));
-                                 } ,
-                                 child: Container(
-                                   width: 93,
-                                   height: 33,
-                                   decoration: BoxDecoration(
-                                       borderRadius: BorderRadius.circular(10),
-                                       border: Border.all(color: Colors.pink),
-                                     color: Colors.pink
-                                   ),
-                                   child: Center(
-                                     child: Text("Call",style: TextStyle(
-                                         color: Colors.white,
-                                         fontSize: 20,
-                                         fontWeight: FontWeight.w400
-                                     ),),
+                               Padding(
+                                 padding: const EdgeInsets.only(left: 15),
+                                 child: GestureDetector(
+                                   onTap: (){
+                                     Navigator.push(context,MaterialPageRoute(builder: (context){
+                                       return const AppointmentDetail();
+                                     }));
+                                   } ,
+                                   child: Container(
+                                     width: 93,
+                                     height: 33,
+                                     decoration: BoxDecoration(
+                                         borderRadius: BorderRadius.circular(10),
+                                         border: Border.all(color: Colors.pink),
+                                       color: Colors.pink
+                                     ),
+                                     child: const Center(
+                                       child: Text("Call",style: TextStyle(
+                                           color: Colors.white,
+                                           fontSize: 20,
+                                           fontWeight: FontWeight.w400
+                                       ),),
+                                     ),
                                    ),
                                  ),
                                ),
-                             ),
-                           ],
+                             ],
+                           ),
                          ),
                        )
 

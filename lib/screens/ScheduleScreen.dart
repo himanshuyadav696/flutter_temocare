@@ -8,7 +8,7 @@ import '../apputils/utils.dart';
 import '../sharedPreferences/SharedPreferencesUtil.dart';
 class ScheduleScreen extends StatefulWidget{
   final String doctorId;
-  ScheduleScreen({required this.doctorId});
+  const ScheduleScreen({super.key, required this.doctorId});
   @override
   State<ScheduleScreen> createState() => _ScheduleScreen();
 }
@@ -17,13 +17,18 @@ class _ScheduleScreen extends State<ScheduleScreen>{
   int selectedDate = -1;
   int selectedSlot = -1;
   var slots = [];
+  var slotSession =[];
   var finalDocorId;
+  bool _loadingApi = false;
   @override
   void initState() {
     finalDocorId = widget.doctorId;
     getDoctorList(finalDocorId.toString());
   }
   Future<void> getDoctorList(finalDocorId) async {
+    setState(() {
+      _loadingApi = true;
+    });
     var apiUrl = ApiConstants.baseUrl+ApiConstants.postDateByDoctorId;
     var accessToken = await SharedPreferencesUtil.getString("accessToken");
     var response = await http.post(
@@ -42,8 +47,58 @@ class _ScheduleScreen extends State<ScheduleScreen>{
         print('Response Data: $responseData');
         setState(() {
           slots = responseData;
+          _loadingApi = false;
         });
         print("doctor fetched lis :$slots");
+        var success = data['response']['message']['success'];
+        var successCode = data['response']['message']['successCode'];
+        var statusCode = data['response']['message']['statusCode'];
+        var successMessage = data['response']['message']['successMessage'];
+        toastMessage(successMessage);
+      }
+      else{
+        String errorMessage = data['error']['errorMessage'];
+        print('Error: ${data['error']['errorMessage']}');
+        toastMessage(errorMessage);
+        setState(() {
+          _loadingApi = false;
+        });
+      }
+    } else {
+      print('Error: ${response.statusCode}');
+      print('Error: ${response.body}');
+      setState(() {
+        _loadingApi = false;
+      });
+    }
+  }
+  Future<void> getSlotTimes(finalDocorId, String slotDate) async {
+    var apiUrl = ApiConstants.baseUrl+ApiConstants.postSlots;
+    var accessToken = await SharedPreferencesUtil.getString("accessToken");
+    var timeZone = DateTime.now().timeZoneName;
+    print(timeZone);
+    var response = await http.post(
+      Uri.parse(apiUrl),
+      body: {
+        'doctor_id':finalDocorId,
+        'slotDate':slotDate,
+        'timezone':"Asia/kolkata",
+        'local_date':slotDate
+      },
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if(data['error']==null){
+        var responseData = data['response']['data']['slot']['slotSessions'];
+        print('Response Data: $responseData');
+        print("doctor fetched lis :$slots");
+        setState(() {
+          slotSession = responseData;
+        });
+        print(slotSession);
         var success = data['response']['message']['success'];
         var successCode = data['response']['message']['successCode'];
         var statusCode = data['response']['message']['statusCode'];
@@ -61,12 +116,14 @@ class _ScheduleScreen extends State<ScheduleScreen>{
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.only(left: 16,right: 16),
           child: Column(
@@ -81,7 +138,7 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                       Navigator.pop(context);
                     },
                   ),
-                  Expanded(
+                  const Expanded(
                     child: Text(
                       "Schedule",style: TextStyle(
                         color: Colors.black,
@@ -91,7 +148,7 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 58,
                     height: 58,
                   )
@@ -102,16 +159,20 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                 children: [
                   SizedBox(
                     height: 80,
-                    child: ListView.builder(
-                        physics: BouncingScrollPhysics(),
+                    child: _loadingApi?Center(child: CircularProgressIndicator(
+                      color: Colors.pink,
+                    )):ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: slots == null ? 0 : slots.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context,int index){
                           DateTime originalDate = DateTime.parse(slots[index]['slotDate2']);
                           String formattedDate = DateFormat('dd-MM-yyyy').format(originalDate);
+                          String slotDate = slots[index]['slotDate'];
                           return GestureDetector(
                             onTap: (){
+                              getSlotTimes(finalDocorId,slotDate);
                               setState(() {
                                 selectedDate = index;
                               });
@@ -131,7 +192,7 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Text("${formattedDate.substring(0,2)}",style: TextStyle(
+                                      Text(formattedDate.substring(0,2),style: TextStyle(
                                           fontSize: 22,
                                           fontWeight: FontWeight.w500,
                                           color: index == selectedDate?Colors.white:Colors.black
@@ -149,8 +210,8 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                           );
                         }),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20),
                     child: Text("Available Slots",style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
@@ -162,10 +223,10 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                       Padding(
                         padding: const EdgeInsets.only(top: 16),
                         child: GridView.builder(
-                            physics: BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: 20,
-                            gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
+                            itemCount: slotSession == null ? 0 : slotSession.length,
+                            gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3, // Number of columns
                                 crossAxisSpacing: 8, // Spacing between columns
                                 mainAxisSpacing: 2,
@@ -196,7 +257,7 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                                                 children: [
                                                   Padding(
                                                     padding: const EdgeInsets.all(10.0),
-                                                    child: Text("$index:00 Am",
+                                                    child: Text(slotSession[index]['start_time'],
                                                       maxLines: 1,
                                                       style: TextStyle(
                                                         fontSize: 16,
@@ -218,8 +279,8 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20),
                     child: Text("Durations",style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
@@ -243,8 +304,8 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                             Row(
                               children: [
                                 SvgPicture.asset("assests/images/ic_clock.svg"),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 10),
                                   child: Text("30 Minutes",style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w400
@@ -263,7 +324,7 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Padding(
@@ -280,8 +341,8 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                         child: Row(
                           children: [
                             SvgPicture.asset("assests/images/yellow_video.svg"),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
                               child: Expanded(child: Center(
                                 child: Row(
                                   children: [
@@ -301,7 +362,7 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                                       ],
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 20),
+                                      padding: EdgeInsets.only(left: 20),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
@@ -329,7 +390,7 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10,bottom: 10),
-                    child: Container(
+                    child: SizedBox(
                       width: double.infinity,
                       height: 56,
                       child: ElevatedButton(onPressed: () {
@@ -339,8 +400,8 @@ class _ScheduleScreen extends State<ScheduleScreen>{
                           shape: MaterialStateProperty.all(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ))
-                      ), child:  Padding(
-                        padding: const EdgeInsets.all(10.0),
+                      ), child:  const Padding(
+                        padding: EdgeInsets.all(10.0),
                         child: Text("Next",style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -358,3 +419,5 @@ class _ScheduleScreen extends State<ScheduleScreen>{
     ));
   }
 }
+
+

@@ -6,14 +6,13 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:temocare_flutter/screens/RegisterationScreen.dart';
 import 'package:temocare_flutter/screens/Splash.dart';
-import 'package:temocare_flutter/sharedPreferences/SessionManager.dart';
 import 'package:temocare_flutter/sharedPreferences/SharedPreferencesUtil.dart';
 import 'Api/ApiConstants.dart';
 import 'apputils/utils.dart';
 import 'screens/HomeScreen.dart';
 import 'screens/forgotEmail.dart';
 void main() {
-  runApp(MyApp(title: 'Hello',));
+  runApp(const MyApp(title: 'Hello',));
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required String title});
@@ -39,12 +38,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
+  ValueNotifier<bool> valueNotifier = ValueNotifier<bool>(true);
+  bool _loading = false ;
   final imgUrl = "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4";
   bool downloading = false;
   var progressString = "";
   var userName ="";
   var userrofile = "";
   void _login(String email, String password) async{
+    setState(() {
+      _loading = true;
+    });
     final response = await http.post(Uri.parse(ApiConstants.baseUrl + ApiConstants.loginEndPoint),body: {
       'email': email,
       'password': password,
@@ -69,7 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
           await SharedPreferencesUtil.saveString("accessToken", accessToken);
           await SharedPreferencesUtil.saveString("profilePic", profilePic);
           await SharedPreferencesUtil.saveBool("isLoginFirst", true);
-          await SessionManager.setLoggedIn(true);
           print('User ID: $userId');
           print('Name: $firstName $lastName');
           print("accessToken $accessToken");
@@ -79,29 +84,40 @@ class _MyHomePageState extends State<MyHomePage> {
           print('Success Message: $successMessage');
           toastMessage(successMessage);
           _navigateToHomeScreen(responseData);
+          setState(() {
+            _loading = false;
+          });
         } else {
           String errorMessage = data['error']['errorMessage'];
           print('Error: ${data['error']['errorMessage']}');
           toastMessage(errorMessage);
+          setState(() {
+            _loading = false;
+          });
         }
       } else {
         print('Error: ${response.statusCode}');
+        setState(() {
+          _loading = false;
+        });
       }
     } catch (error) {
       print('Error: $error');
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
   void _navigateToHomeScreen(Map<String, dynamic> data) {
     Navigator.push(context, MaterialPageRoute(builder:(context){
-      return HomeScreen();
+      return const HomeScreen();
     }));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Container(
          child: Padding(
@@ -129,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                  padding: const EdgeInsets.only(top: 10),
                  child: TextField(
                    controller: email,
+                     focusNode: emailFocusNode,
                      decoration:InputDecoration(
                          isDense: true,
                          contentPadding: const EdgeInsets.only(left: 10,right: 5),
@@ -137,35 +154,55 @@ class _MyHomePageState extends State<MyHomePage> {
                              borderRadius: BorderRadius.circular(10)
                          ),
                          hintText: "Enter your email",
-                     )
+                     ),
+                   onSubmitted: (value){
+                     Utils.focusChange(context,emailFocusNode, passwordFocusNode);
+                   }
                  ),
                ),
-               Padding(
-                 padding: const EdgeInsets.only(top: 20),
-                 child: TextField(
-                   controller: password,
-                     decoration:InputDecoration(
-                         isDense: true,
-                         contentPadding: const EdgeInsets.only(left: 10,right: 5),
-                         suffixIcon: const Icon(Icons.remove_red_eye),
-                         border: OutlineInputBorder(
-                             borderRadius: BorderRadius.circular(10)
+               ValueListenableBuilder(
+                 valueListenable: valueNotifier,
+                 builder: (BuildContext context, bool value, Widget? child) {
+                   return  Padding(
+                     padding: const EdgeInsets.only(top: 20),
+                     child: TextField(
+                         controller: password,
+                         focusNode: passwordFocusNode,
+                         obscureText: valueNotifier.value,
+                         obscuringCharacter: "*",
+                         decoration:InputDecoration(
+                             isDense: true,
+                             contentPadding: const EdgeInsets.only(left: 10,right: 5),
+                             suffixIcon: InkWell(
+                               onTap: (){
+                                 valueNotifier.value = !valueNotifier.value;
+                               },
+                                 child: valueNotifier.value? Icon(Icons.visibility_off_outlined):
+                                 Icon(Icons.visibility)
+                             ),
+                             border: OutlineInputBorder(
+                                 borderRadius: BorderRadius.circular(10)
+                             ),
+                             hintText: "Password"
                          ),
-                         hintText: "Password"
-                     )
-                 ),
+                         onSubmitted: (value){
+                           Utils.focusChange(context,passwordFocusNode, emailFocusNode);
+                         }
+                     ),
+                   );
+                 },
                ),
                 Align(
                  alignment: Alignment.topRight,
                  child: Padding(
-                   padding: EdgeInsets.only(top: 10),
+                   padding: const EdgeInsets.only(top: 10),
                    child: InkWell(
                      onTap: (){
                        Navigator.push(context, MaterialPageRoute(builder:(context){
-                         return ForgotEmail();
+                         return const ForgotEmail();
                        }));
                      },
-                     child: Text(
+                     child: const Text(
                        "Forgot password ?",
                        style: TextStyle(color: Colors.blue),
                      ),
@@ -181,11 +218,15 @@ class _MyHomePageState extends State<MyHomePage> {
                      checkValidation(email.text,password.text);
                    },
                        style: ElevatedButton.styleFrom(
+                           backgroundColor: Colors.pink,
                          shape: RoundedRectangleBorder(
                            borderRadius: BorderRadius.circular(30),
                          )
                        ),
-                       child:const Text("Sigin In")),
+                       child:_loading?CircularProgressIndicator():Text("Sign In",style: TextStyle(
+                         color: Colors.white
+                       ),),
+                   ),
                  ),
                ),
                const Padding(
@@ -249,10 +290,10 @@ class _MyHomePageState extends State<MyHomePage> {
                          InkWell(
                            onTap: (){
                              Navigator.push(context,MaterialPageRoute(builder: (context){
-                               return RegisterationScreen();
+                               return const RegisterationScreen();
                              }));
                            },
-                           child: Text("Sign up",style:
+                           child: const Text("Sign up",style:
                            TextStyle(fontSize: 14,color: Colors.blue),),
                          )
                        ],

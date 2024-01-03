@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-
 class AppointmentDetail extends StatefulWidget{
   const AppointmentDetail({super.key});
 
@@ -16,7 +14,6 @@ class _Appointmentdetail extends State<AppointmentDetail>{
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
         title:  Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -26,7 +23,7 @@ class _Appointmentdetail extends State<AppointmentDetail>{
                 Navigator.pop(context);
               },
             ),
-            Expanded(
+            const Expanded(
               child: Text(
                 "Upcoming",style: TextStyle(
                   color: Colors.black,
@@ -36,7 +33,7 @@ class _Appointmentdetail extends State<AppointmentDetail>{
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 58,
               height: 58,
             )
@@ -65,7 +62,7 @@ class _Appointmentdetail extends State<AppointmentDetail>{
                         width: 80,
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black),
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
                           color: Colors.blueGrey
                         ),
                         child: ClipRRect(
@@ -74,8 +71,8 @@ class _Appointmentdetail extends State<AppointmentDetail>{
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -108,40 +105,40 @@ class _Appointmentdetail extends State<AppointmentDetail>{
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              Text("Scheduled Appointment",style: TextStyle(
+              const Text("Scheduled Appointment",style: TextStyle(
                 color: Colors.black,
                 fontSize: 22,
                 fontWeight: FontWeight.w500
               ),),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text("Today. October 22 2022",style: TextStyle(
+              const Text("Today. October 22 2022",style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text("16:00 - 16:40 PM  (40 minutes)",style: TextStyle(
+              const Text("16:00 - 16:40 PM  (40 minutes)",style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              Text("Patient Information",style: TextStyle(
+              const Text("Patient Information",style: TextStyle(
                   color: Colors.black,
                   fontSize: 22,
                   fontWeight: FontWeight.w500
               ),),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
@@ -205,15 +202,15 @@ class _Appointmentdetail extends State<AppointmentDetail>{
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Text("Your Package",style: TextStyle(
+              const Text("Your Package",style: TextStyle(
                   color: Colors.black,
                   fontSize: 22,
                   fontWeight: FontWeight.w500
               ),),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Container(
@@ -228,8 +225,8 @@ class _Appointmentdetail extends State<AppointmentDetail>{
                   child: Row(
                     children: [
                       SvgPicture.asset("assests/images/yellow_video.svg"),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -258,10 +255,10 @@ class _Appointmentdetail extends State<AppointmentDetail>{
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("Appointment Completed",

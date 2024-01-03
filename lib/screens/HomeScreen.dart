@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:temocare_flutter/Api/ApiConstants.dart';
 import 'package:temocare_flutter/screens/BookNow.dart';
+import 'package:temocare_flutter/screens/ProfilesScreen.dart';
 import 'package:temocare_flutter/screens/myAppointment.dart';
 import 'package:temocare_flutter/screens/profileDetail.dart';
 import 'package:temocare_flutter/sharedPreferences/SharedPreferencesUtil.dart';
@@ -12,17 +12,91 @@ import '../Models/DoctorData.dart';
 import '../apputils/utils.dart';
 import 'doctorDetail.dart';
 class HomeScreen extends StatelessWidget{
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
+      home:BottomNavigationBarExampleApp()
+    );
+  }
+}
+
+class BottomNavigationBarExampleApp extends StatelessWidget {
+  const BottomNavigationBarExampleApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:HomePage()
+      home: BottomNavigationBarExample(),
+    );
+  }
+}
+
+class BottomNavigationBarExample extends StatefulWidget {
+  const BottomNavigationBarExample({super.key});
+
+  @override
+  State<BottomNavigationBarExample> createState() =>
+      _BottomNavigationBarExampleState();
+}
+
+class _BottomNavigationBarExampleState
+    extends State<BottomNavigationBarExample> {
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static final List<Widget> _widgetOptions = <Widget>[
+    const HomePage(),
+    const BookNow(),
+    const myAppointment(),
+    const ProfileScreen()
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        elevation: 10,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month),
+            label: 'Appointment',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month),
+            label: 'My Appointments',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.pink,
+        unselectedItemColor: Colors.black,
+        unselectedLabelStyle: const TextStyle(color: Colors.black),
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
 
 class HomePage extends StatefulWidget{
+  const HomePage({super.key});
+
   @override
   _HomePageState createState()=>_HomePageState();
 }
@@ -33,13 +107,17 @@ class _HomePageState extends State<HomePage> {
   var profile;
   var accessToken;
   var results = [];
+  bool _loading = false;
   @override
   void initState() {
     super.initState();
     _initSharedPreferences();
     getDoctorList();
   }
-  Future<void> getDoctorList() async {
+  void getDoctorList() async {
+    setState(() {
+      _loading = true;
+    });
     try {
       var apiUrl = ApiConstants.baseUrl+ApiConstants.getDoctorListEndPoint;
       var response = await http.get(
@@ -55,6 +133,7 @@ class _HomePageState extends State<HomePage> {
           print('Response Data: $responseData');
           setState(() {
             results = responseData;
+            _loading = false;
           });
           print("doctor fetched lis :$results");
           var success = data['response']['message']['success'];
@@ -67,12 +146,21 @@ class _HomePageState extends State<HomePage> {
           String errorMessage = data['error']['errorMessage'];
           print('Error: ${data['error']['errorMessage']}');
           toastMessage(errorMessage);
+          setState(() {
+            _loading = false;
+          });
         }
       } else {
          print('Error: ${response.statusCode}');
+         setState(() {
+           _loading = false;
+         });
       }
     } catch (error) {
       print('Error: $error');
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
@@ -92,51 +180,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        height: 50,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(onPressed: (){
-
-            },
-                icon: Icon(Icons.home,),
-            ),
-            IconButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context){
-                return BookNow();
-              }));
-            }, icon: Icon(
-                Icons.calendar_month
-            )),
-            IconButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context){
-                return myAppointment();
-              }));
-            }, icon: Icon(
-                Icons.calendar_month_sharp
-            )),
-            IconButton(onPressed: (){
-
-            }, icon: SvgPicture.asset(
-              "assests/images/ic_profile.svg",
-              semanticsLabel: "Profile",
-            ))
-          ],
-        ),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
                 Row(
@@ -146,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("Hello",
+                        const Text("Hello",
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: 24,
@@ -155,7 +203,7 @@ class _HomePageState extends State<HomePage> {
                         Text(
                           "$firstName $lastName",
                           softWrap: true,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 25,
                               color: Colors.black
                           ),
@@ -165,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                     GestureDetector(
                       onTap: (){
                         Navigator.push(context,MaterialPageRoute(builder: (context){
-                          return ProfileDetail();
+                          return const ProfileDetail();
                         }));
                       },
                       child: SizedBox(
@@ -195,23 +243,25 @@ class _HomePageState extends State<HomePage> {
                         child:Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(top: 50,bottom: 40,left: 20),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 50,bottom: 40,left: 20),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const <Widget>[
+                                children: <Widget>[
                                   Text("Get the best",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 24,
                                         fontWeight: FontWeight.w500),
                                   ),
-                                  Text("Medical Services",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w500),
+                                  Flexible(
+                                    child: Text("Medical Services",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -228,20 +278,25 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+                _loading?
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40.0,right: 40,top: 60),
+                      child: CircularProgressIndicator(),
+                    ):
                 ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount:results == null ? 0 : results.length,
                     shrinkWrap: true,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
                         padding: const EdgeInsets.only(top: 5,bottom: 5),
-                        child: Container(
+                        child:Container(
                           width: double.infinity,
-                          height: 110,
+                          height: 140,
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey),
                             color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderRadius: const BorderRadius.all(Radius.circular(20)),
                           ),
                           child: Row(
                             children: [
@@ -252,7 +307,7 @@ class _HomePageState extends State<HomePage> {
                                   width: 60,
                                   decoration: BoxDecoration(
                                       border: Border.all(color: Colors.black),
-                                      borderRadius: BorderRadius.all(Radius.circular(10))
+                                      borderRadius: const BorderRadius.all(Radius.circular(10))
                                   ),
                                   child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
@@ -264,76 +319,75 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                   child: Container(
                                     child: Padding(
-                                      padding: const EdgeInsets.only(top: 15),
+                                      padding: const EdgeInsets.only(top: 10),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(results[index]['fullName'],style: TextStyle(
+                                          Text(results[index]['fullName'],style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 20,
                                             fontWeight: FontWeight.w500,
                                           ),),
-                                          Text(results[index]['specialization'].toString(),style: TextStyle(
+                                          Text(results[index]['specialization'].toString(),style: const TextStyle(
                                             fontSize: 16,
                                             color: Colors.grey,
                                             fontWeight: FontWeight.w400,
                                           ),),
                                           Row(
                                             children: [
-                                              Text("\$${results[index]['fee']}",style: TextStyle(
+                                              Text("\$${results[index]['fee']}",style: const TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w500
                                               ),),
                                               Padding(
                                                 padding: const EdgeInsets.only(right: 10),
-                                                child: Text(" | ${results[index]['experience']} Years",style: TextStyle(
+                                                child: Text(" | ${results[index]['experience']} Years",style: const TextStyle(
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.w500
                                                 ),),
                                               ),
-                                              Expanded(
-                                                child: InkWell(
-                                                  onTap: (){
-                                                    Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                      return  DoctorDetail(doctorData:DoctorData(
-                                                          doctorId: results[index]["doctor_id"].toString(),
-                                                          doctorName: results[index]["fullName"],
-                                                          specialization: results[index]["specialization"],
-                                                          quali: results[index]["qualifi"],
-                                                          experience: results[index]["experience"],
-                                                          descrition: results[index]["description"],
-                                                          rating: results[index]["ratings"],
-                                                          reviews: results[index]["reviews"].toString(),
-                                                        successfull_patients: results[index]["successfull_patients"].toString(),
-                                                        fees: results[index]["fee"].toString()
-                                                      ));
-                                                    }));
-                                                  },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(right: 10),
-                                                    child: Container(
-                                                      width: 140,
-                                                      height: 40,
-                                                      decoration: BoxDecoration(
-                                                          border: Border.all(color: HexColor("#ED787E")),
-                                                          borderRadius: BorderRadius.all(Radius.circular(30))
-                                                      ),
-                                                      child: Container(
-                                                        alignment: Alignment.center,
-                                                        child: Expanded(
-                                                          child: Text("Appointment",style: TextStyle(
-                                                              color: HexColor("#ED787E"),
-                                                              fontWeight: FontWeight.w400,
-                                                              fontSize: 16
-                                                          ),),
-                                                        ),
-                                                      ),
-                                                    ),
+
+                                            ],
+                                          ),
+                                          InkWell(
+                                            onTap: (){
+                                              Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                return  DoctorDetail(doctorData:DoctorData(
+                                                    doctorId: results[index]["doctor_id"].toString(),
+                                                    doctorName: results[index]["fullName"],
+                                                    specialization: results[index]["specialization"],
+                                                    quali: results[index]["qualifi"],
+                                                    experience: results[index]["experience"],
+                                                    descrition: results[index]["description"],
+                                                    rating: results[index]["ratings"],
+                                                    reviews: results[index]["reviews"].toString(),
+                                                    successfull_patients: results[index]["successfull_patients"].toString(),
+                                                    fees: results[index]["fee"].toString()
+                                                ));
+                                              }));
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(right: 10,top: 5),
+                                              child: Container(
+                                                width: double.infinity,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(color: HexColor("#ED787E")),
+                                                    borderRadius: const BorderRadius.all(Radius.circular(30))
+                                                ),
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  child: Expanded(
+                                                    child: Text("Appointment",style: TextStyle(
+                                                        color: HexColor("#ED787E"),
+                                                        fontWeight: FontWeight.w400,
+                                                        fontSize: 16
+                                                    ),),
                                                   ),
                                                 ),
                                               ),
-                                            ],
-                                          )
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -351,4 +405,50 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+class DrawerScren extends StatelessWidget{
+  const DrawerScren({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+    drawer: Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Text(
+              'Drawer Header',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text('Item 1'),
+            onTap: () {
+              // Handle item tap
+              Navigator.pop(context); // Close the drawer
+            },
+          ),
+          ListTile(
+            title: Text('Item 2'),
+            onTap: () {
+              // Handle item tap
+              Navigator.pop(context); // Close the drawer
+            },
+          ),
+          // Add more items as needed
+        ],
+      ),
+    ),
+    );
+  }
+
+}
+
 

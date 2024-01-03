@@ -8,6 +8,8 @@ import '../Models/DoctorData.dart';
 import '../apputils/utils.dart';
 import 'doctorDetail.dart';
 class BookNow extends StatefulWidget{
+  const BookNow({super.key});
+
   @override
   State<BookNow> createState() => _BookNowState();
 }
@@ -58,15 +60,15 @@ class _BookNowState extends State<BookNow>{
   }
   @override
   Widget build(BuildContext context) {
-   return SafeArea(child: Scaffold(
-     body: Scaffold(
+   return SafeArea(
+     child:  Scaffold(
        body: SingleChildScrollView(
          child: Padding(
-           padding: const EdgeInsets.all(16.0),
+           padding: const EdgeInsets.only(left: 16,right:16,top: 10),
            child: Column(
              children: [
                ListView.builder(
-                   physics: NeverScrollableScrollPhysics(),
+                   physics: const NeverScrollableScrollPhysics(),
                    itemCount:results == null ? 0 : results.length,
                    shrinkWrap: true,
                    itemBuilder: (BuildContext context, int index) {
@@ -78,7 +80,7 @@ class _BookNowState extends State<BookNow>{
                          decoration: BoxDecoration(
                            border: Border.all(color: Colors.grey),
                            color: Colors.white,
-                           borderRadius: BorderRadius.all(Radius.circular(20)),
+                           borderRadius: const BorderRadius.all(Radius.circular(20)),
                          ),
                          child: Row(
                            children: [
@@ -89,7 +91,7 @@ class _BookNowState extends State<BookNow>{
                                  width: 60,
                                  decoration: BoxDecoration(
                                      border: Border.all(color: Colors.black),
-                                     borderRadius: BorderRadius.all(Radius.circular(10))
+                                     borderRadius: const BorderRadius.all(Radius.circular(10))
                                  ),
                                  child: ClipRRect(
                                      borderRadius: BorderRadius.circular(8),
@@ -105,25 +107,25 @@ class _BookNowState extends State<BookNow>{
                                      child: Column(
                                        crossAxisAlignment: CrossAxisAlignment.start,
                                        children: [
-                                         Text(results[index]['fullName'],style: TextStyle(
+                                         Text(results[index]['fullName'],style: const TextStyle(
                                            color: Colors.black,
                                            fontSize: 20,
                                            fontWeight: FontWeight.w500,
                                          ),),
-                                         Text(results[index]['specialization'].toString(),style: TextStyle(
+                                         Text(results[index]['specialization'].toString(),style: const TextStyle(
                                            fontSize: 16,
                                            color: Colors.grey,
                                            fontWeight: FontWeight.w400,
                                          ),),
                                          Row(
                                            children: [
-                                             Text("\$${results[index]['fee']}",style: TextStyle(
+                                             Text("\$${results[index]['fee']}",style: const TextStyle(
                                                  color: Colors.black,
                                                  fontWeight: FontWeight.w500
                                              ),),
                                              Padding(
                                                padding: const EdgeInsets.only(right: 10),
-                                               child: Text(" | ${results[index]['experience']} Years",style: TextStyle(
+                                               child: Text(" | ${results[index]['experience']} Years",style: const TextStyle(
                                                    color: Colors.black,
                                                    fontWeight: FontWeight.w500
                                                ),),
@@ -131,20 +133,20 @@ class _BookNowState extends State<BookNow>{
                                              Expanded(
                                                child: InkWell(
                                                  onTap: (){
-                                                 Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                   return  DoctorDetail(doctorData: DoctorData(
-                                                       doctorId: results[index]["doctor_id"].toString(),
-                                                       doctorName: results[index]["fullName"],
-                                                       specialization: results[index]["specialization"],
-                                                       quali: results[index]["qualifi"],
-                                                       experience: results[index]["experience"],
-                                                       descrition: results[index]["description"],
-                                                       rating: results[index]["ratings"],
-                                                       reviews: results[index]["reviews"].toString(),
-                                                       successfull_patients: results[index]["successfull_patients"].toString(),
-                                                       fees: results[index]["fee"].toString()
-                                                   ),);
-                                                 }));
+                                                   Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                     return  DoctorDetail(doctorData: DoctorData(
+                                                         doctorId: results[index]["doctor_id"].toString(),
+                                                         doctorName: results[index]["fullName"],
+                                                         specialization: results[index]["specialization"],
+                                                         quali: results[index]["qualifi"],
+                                                         experience: results[index]["experience"],
+                                                         descrition: results[index]["description"],
+                                                         rating: results[index]["ratings"],
+                                                         reviews: results[index]["reviews"].toString(),
+                                                         successfull_patients: results[index]["successfull_patients"].toString(),
+                                                         fees: results[index]["fee"].toString()
+                                                     ),);
+                                                   }));
                                                  },
                                                  child: Padding(
                                                    padding: const EdgeInsets.only(right: 10),
@@ -153,7 +155,7 @@ class _BookNowState extends State<BookNow>{
                                                      height: 40,
                                                      decoration: BoxDecoration(
                                                          border: Border.all(color: HexColor("#ED787E")),
-                                                         borderRadius: BorderRadius.all(Radius.circular(30))
+                                                         borderRadius: const BorderRadius.all(Radius.circular(30))
                                                      ),
                                                      child: Container(
                                                        alignment: Alignment.center,
@@ -185,6 +187,6 @@ class _BookNowState extends State<BookNow>{
          ),
        ),
      ),
-   ));
+   );
   }
 }

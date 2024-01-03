@@ -4,10 +4,10 @@ import 'package:temocare_flutter/apputils/utils.dart';
 import 'package:http/http.dart' as http;
 import 'forgotEmail.dart';
 class RegisterationScreen extends StatelessWidget{
-  RegisterationScreen({super.key});
+  const RegisterationScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: registerScreen(),
     );
@@ -16,6 +16,8 @@ class RegisterationScreen extends StatelessWidget{
 
 
 class registerScreen extends StatefulWidget{
+  const registerScreen({super.key});
+
   @override
   _registerScreen createState()=>_registerScreen();
 }
@@ -33,20 +35,20 @@ class _registerScreen extends State<registerScreen>{
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Column(
+        title: const Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
+            children: [
               Text("Registration")
             ]),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 80),
+            const Padding(
+              padding: EdgeInsets.only(top: 80),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children:const [
+                children:[
                   SizedBox(
                     height: 100,
                     width: 100,
@@ -161,10 +163,10 @@ class _registerScreen extends State<registerScreen>{
                   )
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5),
+            const Padding(
+              padding: EdgeInsets.only(top: 5),
               child: Row(
-                children: const [
+                children: [
                   checkBox(),
                   Text("I accept",style: TextStyle(
                     fontSize: 14
@@ -203,11 +205,11 @@ class _registerScreen extends State<registerScreen>{
                           borderRadius: BorderRadius.circular(30),
                         )
                     ),
-                    child:Text("Sign Up")),
+                    child:const Text("Sign Up")),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 20,bottom: 20),
+              padding: const EdgeInsets.only(top: 20,bottom: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

@@ -12,7 +12,7 @@ import '../sharedPreferences/SharedPreferencesUtil.dart';
 
 class EditProfile extends StatefulWidget{
   final ProfileData profileData;
-  EditProfile({required this.profileData});
+  const EditProfile({super.key, required this.profileData});
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
@@ -76,7 +76,7 @@ class _EditProfileState extends State<EditProfile>{
                               width: 100,
                               child: Card(
                                 elevation: 4,
-                                shape: CircleBorder(),
+                                shape: const CircleBorder(),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(360),
                                     child: Image.network(profilePc.toString())),
@@ -97,7 +97,7 @@ class _EditProfileState extends State<EditProfile>{
                       height: 75,
                       child: Card(
                         shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.grey,width: 1),
+                          side: const BorderSide(color: Colors.grey,width: 1),
                           borderRadius: BorderRadius.circular(15)
                         ),
                         child: Padding(
@@ -118,8 +118,8 @@ class _EditProfileState extends State<EditProfile>{
                                   maxLines: 1,
                                   controller:firstName,
                                   keyboardType: TextInputType.text,
-                                  style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
-                                  decoration: InputDecoration(
+                                  style: const TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
+                                  decoration: const InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Lucy",
                                   ),
@@ -138,7 +138,7 @@ class _EditProfileState extends State<EditProfile>{
                       height: 75,
                       child: Card(
                         shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.grey,width: 1),
+                            side: const BorderSide(color: Colors.grey,width: 1),
                             borderRadius: BorderRadius.circular(15)
                         ),
                         child: Padding(
@@ -159,8 +159,8 @@ class _EditProfileState extends State<EditProfile>{
                                   maxLines: 1,
                                   controller:lastName,
                                   keyboardType: TextInputType.name,
-                                  style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
-                                  decoration: InputDecoration(
+                                  style: const TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
+                                  decoration: const InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Martin",
                                   ),
@@ -179,7 +179,7 @@ class _EditProfileState extends State<EditProfile>{
                       height: 75,
                       child: Card(
                         shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.grey,width: 1),
+                            side: const BorderSide(color: Colors.grey,width: 1),
                             borderRadius: BorderRadius.circular(15)
                         ),
                         child: Padding(
@@ -200,8 +200,8 @@ class _EditProfileState extends State<EditProfile>{
                                   maxLines: 1,
                                   controller: email,
                                   keyboardType: TextInputType.emailAddress,
-                                  style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
-                                  decoration: InputDecoration(
+                                  style: const TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
+                                  decoration: const InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "lucy@yopmail.com",
                                   ),
@@ -220,7 +220,7 @@ class _EditProfileState extends State<EditProfile>{
                       height: 75,
                       child: Card(
                         shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.grey,width: 1),
+                            side: const BorderSide(color: Colors.grey,width: 1),
                             borderRadius: BorderRadius.circular(15)
                         ),
                         child: Padding(
@@ -241,8 +241,8 @@ class _EditProfileState extends State<EditProfile>{
                                   maxLines: 1,
                                   controller: age,
                                   keyboardType: TextInputType.number,
-                                  style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
-                                  decoration: InputDecoration(
+                                  style: const TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
+                                  decoration: const InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "18",
                                   ),
@@ -261,7 +261,7 @@ class _EditProfileState extends State<EditProfile>{
                       height: 75,
                       child: Card(
                         shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.grey,width: 1),
+                            side: const BorderSide(color: Colors.grey,width: 1),
                             borderRadius: BorderRadius.circular(15)
                         ),
                         child: Padding(
@@ -282,8 +282,8 @@ class _EditProfileState extends State<EditProfile>{
                                   maxLines: 1,
                                   controller: gender,
                                   keyboardType: TextInputType.text,
-                                  style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
-                                  decoration: InputDecoration(
+                                  style: const TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.w400),
+                                  decoration: const InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Male",
                                   ),
@@ -299,14 +299,14 @@ class _EditProfileState extends State<EditProfile>{
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20,bottom: 20),
-                child: Container(
+                child: SizedBox(
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 16,right: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Container(
+                        SizedBox(
                           height: 60,
                           child: ElevatedButton(
                             style: ButtonStyle(
@@ -325,27 +325,28 @@ class _EditProfileState extends State<EditProfile>{
                                   profilePc,
                                   context
                               );},
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
+                              child: const Padding(
+                                padding: EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
                                 child: Text("Update",style: TextStyle(
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w600
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white
                                 ),
                           ),
                               )),
                         ),
-                        Container(
+                        SizedBox(
                           height: 60,
                           child: OutlinedButton(
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
-                              side: MaterialStateProperty.all(BorderSide(color: Colors.pink,width: 2))
+                              side: MaterialStateProperty.all(const BorderSide(color: Colors.pink,width: 2))
                             ),
                               onPressed: (){
                               Navigator.pop(context);
                               },
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
+                              child: const Padding(
+                                padding: EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
                                 child: Text("Cancel",style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,

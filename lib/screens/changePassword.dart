@@ -38,7 +38,7 @@ class _ChangePasswordState extends State<ChangePassword>{
                   ),)
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               SingleChildScrollView(
@@ -51,7 +51,7 @@ class _ChangePasswordState extends State<ChangePassword>{
                             suffixIcon: const Icon(Icons.remove_red_eye),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.pink)
+                                borderSide: const BorderSide(color: Colors.pink)
                             ),
                             hintText: "Old Password"
                         ),
@@ -71,7 +71,7 @@ class _ChangePasswordState extends State<ChangePassword>{
                       suffixIcon: const Icon(Icons.remove_red_eye),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.pink)
+                          borderSide: const BorderSide(color: Colors.pink)
                       ),
                       hintText: "New Password"
                   )
@@ -88,12 +88,12 @@ class _ChangePasswordState extends State<ChangePassword>{
                       suffixIcon: const Icon(Icons.remove_red_eye),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.pink)
+                        borderSide: const BorderSide(color: Colors.pink)
                       ),
                       hintText: "New Confirm Password"
                   )
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               ElevatedButton(onPressed: (){
@@ -105,8 +105,8 @@ class _ChangePasswordState extends State<ChangePassword>{
                     borderRadius: BorderRadius.circular(30),
                   ))
               ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
                   child: Text("Change Password",style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '../main.dart';
-
 class Splash extends StatefulWidget{
   const Splash({super.key});
   @override
@@ -14,8 +13,9 @@ class _SplashState extends State<Splash>{
     _navigateToLogin();
   }
   _navigateToLogin() async{
-    await Future.delayed(Duration(milliseconds: 1500),(){});
-    Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>MyHomePage(title: 'Hello',)));
+    await Future.delayed(const Duration(milliseconds: 1500),(){});
+    Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const MyHomePage(title: 'Hello',)));
+
   }
 
   @override

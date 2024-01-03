@@ -25,9 +25,9 @@ class ForgotEmail extends StatelessWidget{
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 20),
                       child: Container(
-                        child: Text("Forgot Password",style: TextStyle(
+                        child: const Text("Forgot Password",style: TextStyle(
                           color: Colors.black,fontSize: 22,fontWeight: FontWeight.w500
                         ),),
                       ),
@@ -65,7 +65,7 @@ class ForgotEmail extends StatelessWidget{
                             borderRadius: BorderRadius.circular(30)
                           )
                         ),
-                        child: Text("Send otp",style: TextStyle(color: Colors.white),)
+                        child: const Text("Send otp",style: TextStyle(color: Colors.white),)
                     ),
                   ),
                 )
@@ -92,7 +92,7 @@ class OtpScreen extends StatelessWidget {
           body: SingleChildScrollView(
             child: SafeArea(
               child: Padding(
-            padding: EdgeInsets.only(left: 16,right: 16),
+            padding: const EdgeInsets.only(left: 16,right: 16),
               child: Column(
                 children: [
                   Row(
@@ -119,7 +119,7 @@ class OtpScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 10),
                     child: Container(
                       alignment: Alignment.centerLeft,
-                      child: Text("Enter otp here",style: TextStyle(
+                      child: const Text("Enter otp here",style: TextStyle(
                         fontSize: 16
                       ),),
                     ),
@@ -130,12 +130,12 @@ class OtpScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(left: 10,right: 10),
-                          child: Container(
+                          padding: const EdgeInsets.only(left: 10,right: 10),
+                          child: SizedBox(
                             height: 70,
                             width: 70,
                             child: TextField(
-                              style: TextStyle(fontSize: 20),
+                              style: const TextStyle(fontSize: 20),
                               maxLength: 1,
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.number,
@@ -152,11 +152,11 @@ class OtpScreen extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
-                          child: Container(
+                          child: SizedBox(
                             height: 70,
                             width: 70,
                             child: TextField(
-                              style: TextStyle(fontSize: 20),
+                              style: const TextStyle(fontSize: 20),
                               maxLength: 1,
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.number,
@@ -173,11 +173,11 @@ class OtpScreen extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
-                          child: Container(
+                          child: SizedBox(
                             height: 70,
                             width: 70,
                             child: TextField(
-                              style: TextStyle(fontSize: 20),
+                              style: const TextStyle(fontSize: 20),
                               maxLength: 1,
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.number,
@@ -192,11 +192,11 @@ class OtpScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           height: 70,
                           width: 70,
                           child: TextField(
-                            style: TextStyle(fontSize: 20),
+                            style: const TextStyle(fontSize: 20),
                             maxLength: 1,
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
@@ -227,14 +227,14 @@ class OtpScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30)
                           )
                         ),
-                        child: Text("Next"),
+                        child: const Text("Next"),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20),
                     child: Column(
-                      children: const [
+                      children: [
                         Text("Didn’t received any code",style: TextStyle(
                           color: Colors.black,fontSize: 16
                         ),),
